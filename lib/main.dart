@@ -32,10 +32,10 @@ class MyApp extends StatelessWidget {
       title: 'ارشيف قرارات وزارة الاقتصاد',
       theme: ThemeData(
         //fontFamily: 'Poppins',
-        primaryColor: Colors.white,
+        primaryColor: Color.fromARGB(248, 248, 243, 240),
         floatingActionButtonTheme: FloatingActionButtonThemeData(
           elevation: 0,
-          foregroundColor: Colors.white,
+          foregroundColor: Color.fromARGB(248, 248, 243, 240),
         ),
 
         textTheme: TextTheme(

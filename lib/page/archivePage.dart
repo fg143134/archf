@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:archf/model/DecreeArchive.dart';
+import 'package:archf/page/PdfP.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:archf/widgets/tabbar_widget.dart';
@@ -10,6 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 
@@ -218,6 +220,8 @@ class _HomePageState extends State<HomePage> {
             if (data.toString().contains(".pdf")) {
               downloadFile(
                   'http://pc.eidc.gov.ly:8080/api/public/file/download/$data');
+              OpenPdf(
+                  'http://pc.eidc.gov.ly:8080/api/public/file/download/$data');
             }
           })))
       .toList();
@@ -226,6 +230,16 @@ class _HomePageState extends State<HomePage> {
     String formattedDateTime =
         DateFormat('yyyyMMdd_kkmmss').format(DateTime.now()).toString();
     return formattedDateTime;
+  }
+
+  void OpenPdf(String pdfUrl) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => PdfP(
+            pDfF: pdfUrl,
+          ),
+        ));
   }
 
   Future<void> downloadFile(String pdfUrl) async {

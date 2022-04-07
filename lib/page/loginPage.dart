@@ -37,9 +37,13 @@ class _loginPageState extends State<loginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final newTextTheme = Theme.of(context).textTheme.apply(
+          bodyColor: Color.fromARGB(255, 188, 139, 70),
+          displayColor: Color.fromARGB(255, 188, 139, 70),
+        );
     return Scaffold(
       key: Scaffoldkey,
-      backgroundColor: Theme.of(context).colorScheme.secondary,
+      backgroundColor: Color.fromARGB(255, 255, 241, 234),
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
@@ -51,7 +55,7 @@ class _loginPageState extends State<loginPage> {
                   margin: EdgeInsets.symmetric(vertical: 85, horizontal: 20),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
-                      color: Theme.of(context).primaryColor,
+                      color: Colors.white,
                       boxShadow: [
                         BoxShadow(
                             color: Theme.of(context).hintColor.withOpacity(0.2),
@@ -65,13 +69,15 @@ class _loginPageState extends State<loginPage> {
                         SizedBox(
                           height: 25,
                         ),
-                        Text(
-                          "تسجيل دخول",
-                          style: Theme.of(context).textTheme.headline2,
+
+                        Image.asset(
+                          "assets/images/EdLogo.png",
+                          height: 100,
                         ),
+
                         // ignore: prefer_const_constructors
                         SizedBox(
-                          height: 20,
+                          height: 25,
                         ),
                         new TextFormField(
                           //Change this to Name if needed
@@ -82,20 +88,17 @@ class _loginPageState extends State<loginPage> {
                             hintText: "اسم المستخدم او البريد الالكتروني",
                             enabledBorder: UnderlineInputBorder(
                               borderSide: BorderSide(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .secondary
+                                color: Color.fromARGB(255, 188, 139, 70)
                                     .withOpacity(0.2),
                               ),
                             ),
                             focusedBorder: UnderlineInputBorder(
                               borderSide: BorderSide(
-                                  color:
-                                      Theme.of(context).colorScheme.secondary),
+                                  color: Color.fromARGB(255, 188, 139, 70)),
                             ),
                             prefixIcon: Icon(
                               Icons.email,
-                              color: Theme.of(context).colorScheme.secondary,
+                              color: Color.fromARGB(255, 188, 139, 70),
                             ),
                           ),
                         ),
@@ -116,20 +119,17 @@ class _loginPageState extends State<loginPage> {
                             hintText: "كلمة المرور",
                             enabledBorder: UnderlineInputBorder(
                               borderSide: BorderSide(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .secondary
+                                color: Color.fromARGB(255, 188, 139, 70)
                                     .withOpacity(0.2),
                               ),
                             ),
                             focusedBorder: UnderlineInputBorder(
                               borderSide: BorderSide(
-                                  color:
-                                      Theme.of(context).colorScheme.secondary),
+                                  color: Color.fromARGB(255, 188, 139, 70)),
                             ),
                             prefixIcon: Icon(
                               Icons.password,
-                              color: Theme.of(context).colorScheme.secondary,
+                              color: Color.fromARGB(255, 188, 139, 70),
                             ),
                             suffixIcon: IconButton(
                               onPressed: () {
@@ -137,9 +137,7 @@ class _loginPageState extends State<loginPage> {
                                   HidePass = !HidePass;
                                 });
                               },
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .secondary
+                              color: Color.fromARGB(255, 188, 139, 70)
                                   .withOpacity(0.4),
                               icon: Icon(HidePass
                                   ? Icons.visibility_off
@@ -158,8 +156,7 @@ class _loginPageState extends State<loginPage> {
                               horizontal: 80,
                             ),
                             shape: StadiumBorder(),
-                            backgroundColor:
-                                Theme.of(context).colorScheme.secondary,
+                            backgroundColor: Color.fromARGB(255, 188, 139, 70),
                           ),
                           autofocus: true,
                           clipBehavior: Clip.none,

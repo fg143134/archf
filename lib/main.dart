@@ -3,6 +3,7 @@
 import 'dart:io';
 
 import 'package:archf/model/DecreeArchive.dart';
+import 'package:archf/page/arPage.dart';
 import 'package:archf/page/archivePage.dart';
 import 'package:archf/page/loginPage.dart';
 import 'package:flutter/material.dart';
@@ -55,7 +56,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: loginPage(),
       routes: <String, WidgetBuilder>{
-        '/home': (BuildContext context) => new HomePage(),
+        '/home': (BuildContext context) => new SearchPage(),
         '/login': (BuildContext context) => new loginPage(),
       },
     );

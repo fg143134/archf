@@ -36,13 +36,13 @@ dependencies:
   cupertino_icons: ^1.0.2
   http: ^0.13.4
   meta: ^1.7.0
-  flutter_secure_storage: ^5.0.2
   pull_to_refresh: ^2.0.0
   path_provider: ^2.0.9
   dio: ^4.0.4
   permission_handler: ^9.1.0
   intl: ^0.17.0
   syncfusion_flutter_pdfviewer: ^19.4.54-beta
+  shared_preferences: ^2.0.13
 dev_dependencies:
   flutter_test:
     sdk: flutter

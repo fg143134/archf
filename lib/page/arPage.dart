@@ -5,13 +5,13 @@ import 'package:archf/model/DecreeArchive.dart';
 import 'package:archf/page/Details.dart';
 import 'package:archf/page/PdfP.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:archf/widgets/tabbar_widget.dart';
 import 'package:archf/widgets/scrollable_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
@@ -25,7 +25,6 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  final storage = const FlutterSecureStorage();
   int? sortColumnIndex;
   bool isAscending = false;
   int CurrentPage = 0;
@@ -67,7 +66,7 @@ class _SearchPageState extends State<SearchPage> {
           "http://pc.eidc.gov.ly:8080/api/decrees?decreeNo.contains=$_searchResult&title.contains=$_searchResult&decreeDate.contains=$_searchResult&notes.contains=$_searchResult&keywords.contains=$_searchResult&page=$CurrentPage&size=20&sort=id,asc");
     }
 
-    final tokenJwt = await storage.read(key: 'jwt');
+    final tokenJwt = (await SharedPreferences.getInstance()).getString("jwt");
 
     final response = await http.get(uri, headers: {
       //'Content-Type': 'application/json',
@@ -99,7 +98,10 @@ class _SearchPageState extends State<SearchPage> {
 
       });
       return true;
-    } else {
+    } else{
+      print('notworking');
+      Navigator.of(context)
+          .pushReplacementNamed('/login');
       return false;
     }
   }
@@ -211,9 +213,15 @@ class _SearchPageState extends State<SearchPage> {
           appBar: AppBar(
             elevation: 0,
             backgroundColor: Color.fromARGB(255, 253, 253, 253),
-            leading: Icon(
-              Icons.person,
+            leading: IconButton(icon: Icon(
+              Icons.logout_rounded,
               color: Color.fromARGB(255, 188, 139, 70),
+            ), onPressed: () async{
+              (await SharedPreferences.getInstance()).remove('jwt');
+              Navigator.of(context)
+                  .pushReplacementNamed('/login');
+
+            },
             ),
             actions: <Widget>[
               IconButton(

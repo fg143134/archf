@@ -4,13 +4,13 @@ import 'dart:io';
 import 'package:archf/model/DecreeArchive.dart';
 import 'package:archf/page/PdfP.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:archf/widgets/tabbar_widget.dart';
 import 'package:archf/widgets/scrollable_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
@@ -23,7 +23,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final storage = const FlutterSecureStorage();
   int? sortColumnIndex;
   bool isAscending = false;
   int CurrentPage = 0;
@@ -63,7 +62,8 @@ class _HomePageState extends State<HomePage> {
           "http://pc.eidc.gov.ly:8080/api/decrees?decreeNo.contains=$searchResult&title.contains=$searchResult&decreeDate.contains=$searchResult&notes.contains=$searchResult&keywords.contains=$searchResult&page=$CurrentPage&size=20&sort=id,asc");
     }
 
-    final tokenJwt = await storage.read(key: 'jwt');
+    final tokenJwt = (await SharedPreferences.getInstance()).getString("jwt");
+
 
     final response = await http.get(uri, headers: {
       //'Content-Type': 'application/json',

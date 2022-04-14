@@ -1,9 +1,10 @@
 // ignore_for_file: unnecessary_new
 
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:archf/apiS/LoginService.dart';
 import 'package:archf/model/LoginM.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class loginPage extends StatefulWidget {
   const loginPage({Key? key}) : super(key: key);
@@ -18,20 +19,48 @@ class _loginPageState extends State<loginPage> {
   bool HidePass = true;
   late LoginM requestModel;
   bool isAPICallPros = false;
-  final storage = FlutterSecureStorage();
-  final options = IOSOptions(accessibility: IOSAccessibility.first_unlock);
+  String User = "";
+  final TextEditingController Con = TextEditingController();
+  late TextEditingController ConP = TextEditingController();
+
+  String Pass = "";
+
+  Future<SharedPreferences> Prefs() async {
+    return await SharedPreferences.getInstance();
+  }
+
+  void S() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('PassWord', requestModel.password.toString());
+
+    await prefs.setString('UserName', requestModel.username.toString());
+
+  }
 
   @override
-   void initState() {
+  void initState() {
     super.initState();
-      var se = (storage.read(key: 'jwt')).toString();
-  print(se);
-    if ((storage.read(key: 'jwt')).toString() ==
-        "Instance of 'Future<String?>'") {
-      // Navigator.of(context).pushReplacementNamed('/login');
-    } else {
-      Navigator.of(context).pushReplacementNamed('/login');
+
+
+    void V() async {
+      final Pref = await SharedPreferences.getInstance();
+      final String? user = await Pref.getString('UserName');
+      final String? password = await Pref.getString('PassWord');
+
+      user.toString() == Null ? User = "" : User = user.toString();
+      User == "null" ? User ="": User = User;
+
+      Con.text = User;
+
+      password.toString() == Null ? Pass = "" : Pass = password.toString();
+      Pass == "null" ? Pass ="": Pass = Pass;
+      ConP.text = Pass;
     }
+
+    ;
+    setState(() {
+      V();
+    });
     requestModel = new LoginM();
   }
 
@@ -82,6 +111,7 @@ class _loginPageState extends State<loginPage> {
                         new TextFormField(
                           //Change this to Name if needed
                           keyboardType: TextInputType.emailAddress,
+                          controller: Con,
                           onSaved: (input) => requestModel.username = input,
 
                           decoration: new InputDecoration(
@@ -112,6 +142,7 @@ class _loginPageState extends State<loginPage> {
                               ? "كلمة المرور يجب ان تكون اكتر من ثلاثة حروف"
                               : null,
                           obscureText: HidePass,
+                          controller: ConP,
 
                           onSaved: (input) => requestModel.password = input,
 
@@ -186,11 +217,14 @@ class _loginPageState extends State<loginPage> {
                                       }
                                     else
                                       {
-                                        await storage.write(
-                                            key: 'jwt',
-                                            value: value.token,
-                                            iOptions: options),
-                                        globalFormKey.currentState?.reset(),
+                                        (await SharedPreferences.getInstance()).setString("jwt", value.token.toString()),
+
+                                        setState(() {
+                                          S();
+                                        }),
+
+
+
                                         Navigator.of(context)
                                             .pushReplacementNamed('/home'),
 

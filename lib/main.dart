@@ -55,7 +55,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       debugShowCheckedModeBanner: false,
-      home:  loginPage(),
+      home:  SearchPage(),
       routes: <String, WidgetBuilder>{
         '/home': (BuildContext context) => new SearchPage(),
         '/login': (BuildContext context) => new loginPage(),

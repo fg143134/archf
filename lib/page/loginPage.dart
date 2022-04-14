@@ -22,15 +22,15 @@ class _loginPageState extends State<loginPage> {
   final options = IOSOptions(accessibility: IOSAccessibility.first_unlock);
 
   @override
-  void initState() {
+   void initState() {
     super.initState();
-    var se = (storage.read(key: 'jwt')).toString();
-
+      var se = (storage.read(key: 'jwt')).toString();
+  print(se);
     if ((storage.read(key: 'jwt')).toString() ==
         "Instance of 'Future<String?>'") {
       // Navigator.of(context).pushReplacementNamed('/login');
     } else {
-      Navigator.of(context).pushReplacementNamed('/home');
+      Navigator.of(context).pushReplacementNamed('/login');
     }
     requestModel = new LoginM();
   }

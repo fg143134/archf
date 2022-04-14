@@ -3,6 +3,7 @@
 import 'dart:io';
 
 import 'package:archf/model/DecreeArchive.dart';
+import 'package:archf/page/Details.dart';
 import 'package:archf/page/arPage.dart';
 import 'package:archf/page/archivePage.dart';
 import 'package:archf/page/loginPage.dart';
@@ -54,10 +55,11 @@ class MyApp extends StatelessWidget {
         ),
       ),
       debugShowCheckedModeBanner: false,
-      home: loginPage(),
+      home:  loginPage(),
       routes: <String, WidgetBuilder>{
         '/home': (BuildContext context) => new SearchPage(),
         '/login': (BuildContext context) => new loginPage(),
+
       },
     );
   }

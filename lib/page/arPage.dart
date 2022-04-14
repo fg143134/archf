@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:archf/model/DecreeArchive.dart';
+import 'package:archf/page/Details.dart';
 import 'package:archf/page/PdfP.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -44,24 +45,26 @@ class _SearchPageState extends State<SearchPage> {
   int totalPages = 1;
   final RefreshController refreshController =
       RefreshController(initialRefresh: true);
+  final TextEditingController _controller = TextEditingController();
 
   Future<bool> GetDataArch({bool isrefresh = false}) async {
     if (isrefresh) {
       CurrentPage = 0;
+      setState(() {
+        _searchResult = "";
+
+      });
     } else {
-      if (CurrentPage >= totalPages) {
-        refreshController.loadNoData();
-        return false;
-      }
+
     }
     final Uri uri;
-    if (searchResult == "") {
+    if (_searchResult == "") {
       uri = Uri.parse(
           "http://pc.eidc.gov.ly:8080/api/decrees?page=$CurrentPage&size=20&sort=id,asc");
     } else {
       totalPages = 1;
       uri = Uri.parse(
-          "http://pc.eidc.gov.ly:8080/api/decrees?decreeNo.contains=$searchResult&title.contains=$searchResult&decreeDate.contains=$searchResult&notes.contains=$searchResult&keywords.contains=$searchResult&page=$CurrentPage&size=20&sort=id,asc");
+          "http://pc.eidc.gov.ly:8080/api/decrees?decreeNo.contains=$_searchResult&title.contains=$_searchResult&decreeDate.contains=$_searchResult&notes.contains=$_searchResult&keywords.contains=$_searchResult&page=$CurrentPage&size=20&sort=id,asc");
     }
 
     final tokenJwt = await storage.read(key: 'jwt');
@@ -78,7 +81,6 @@ class _SearchPageState extends State<SearchPage> {
       } else {
         arch = result;
       }
-
       CurrentPage++;
       var s = response.headers.values.toList().asMap();
       if (totalPages > 10) {
@@ -86,9 +88,16 @@ class _SearchPageState extends State<SearchPage> {
         int Nu = int.parse(s[12] ?? "20");
         totalPages = (Nu / 20).ceil();
       }
-      getPostsData();
+      print(totalPages);
+      if(result !=[]){
+        getPostsData();
 
-      setState(() {});
+      }
+
+      setState(() {
+        searchResult = _searchResult;
+
+      });
       return true;
     } else {
       return false;
@@ -101,7 +110,14 @@ class _SearchPageState extends State<SearchPage> {
     responseList.forEach((post) {
       listItems.add(GestureDetector(
           onTap: () {
-            print("${post.id}");
+
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DetailPage(
+                    PostPdf: post,
+                  ),
+                ));
           },
           child: Container(
               height: 150,
@@ -186,6 +202,9 @@ class _SearchPageState extends State<SearchPage> {
           } else {
             refreshController.refreshFailed();
           }
+          setState(() {
+            _controller.text = "";
+          });
         },
         child: Scaffold(
           backgroundColor: Color.fromARGB(255, 255, 255, 255),
@@ -193,35 +212,107 @@ class _SearchPageState extends State<SearchPage> {
             elevation: 0,
             backgroundColor: Color.fromARGB(255, 253, 253, 253),
             leading: Icon(
-              Icons.menu,
-              color: Colors.black,
+              Icons.person,
+              color: Color.fromARGB(255, 188, 139, 70),
             ),
             actions: <Widget>[
               IconButton(
-                icon: Icon(Icons.search,
+                icon: Icon(Icons.menu_rounded,
                     color: Color.fromARGB(255, 188, 139, 70)),
-                onPressed: () {},
+                onPressed: () {
+                  setState(() {
+                    CurrentPage = 0;
+                    print(_searchResult);
+                  });
+
+                  GetDataArch();
+                },
               ),
-              IconButton(
-                icon: Icon(Icons.person,
-                    color: Color.fromARGB(255, 188, 139, 70)),
-                onPressed: () {},
-              )
+
             ],
           ),
           body: Container(
             height: size.height,
-            child: Expanded(
-              child: ListView.builder(
-                  itemCount: itemsData.length,
-                  itemBuilder: (context, index) {
-                    return Directionality(
-                        textDirection: ui.TextDirection.rtl,
-                        child: Align(
-                            alignment: Alignment.topCenter,
-                            child: itemsData[index]));
-                  }),
-            ),
+              margin: EdgeInsets.only(top: 10),
+              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 20),
+              decoration: BoxDecoration(
+                color: Colors.black38.withAlpha(10),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(20),
+                ),
+              ),
+            child: Column(children:
+                [
+    Row(children: <Widget>[ Expanded(
+  child:
+  Directionality(
+    textDirection: ui.TextDirection.rtl,
+    child:
+    TextField(
+    controller: _controller,
+    textAlign:  TextAlign.right,
+    decoration: InputDecoration(
+
+      hintText: "بحث",
+      hintStyle: TextStyle(
+        color: Colors.black.withAlpha(120),
+      ),
+      border: InputBorder.none,
+    ),
+    onChanged:(value){
+      setState(() {
+        _searchResult = value;
+        print(_searchResult);
+      });},
+    onSubmitted: (value){
+      setState(() {
+        CurrentPage = 0;
+        _searchResult = value;
+        print(_searchResult);
+      });
+
+      GetDataArch();
+    },
+  ),
+),),
+      IconButton(
+        icon: Icon(Icons.search,
+            color: Color.fromARGB(255, 188, 139, 70)),
+        onPressed: () {
+          setState(() {
+            CurrentPage = 0;
+            print(_searchResult);
+          });
+
+          GetDataArch();
+        },
+      ),
+  ],),
+
+
+              Expanded(
+
+                child: ListView.builder(
+                    itemCount: itemsData.length,
+                    itemBuilder: (context, index) {
+                      return Directionality(
+                          textDirection: ui.TextDirection.rtl,
+                          child: Align(
+                              alignment: Alignment.topCenter,
+                              child: itemsData[index]));
+                    }),
+              ),
+              IconButton(onPressed: (){
+
+              }, icon: IconButton(
+                icon: const Icon(Icons.arrow_circle_right_sharp),
+                color: Color.fromARGB(255, 188, 139, 70),
+                onPressed: () {
+                  GetDataArch();
+
+                },
+              ), )
+            ],)
           ),
         ),
       ),

@@ -149,7 +149,8 @@ class _HomePageState extends State<HomePage> {
             onChanged: (value) {
               setState(() {
                 _searchResult = value;
-              });
+              },
+              );
             }),
         trailing: IconButton(
           icon: const Icon(Icons.cancel),

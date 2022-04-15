@@ -46,18 +46,34 @@ class _SearchPageState extends State<SearchPage> {
       RefreshController(initialRefresh: true);
   final TextEditingController _controller = TextEditingController();
 
-  Future<bool> GetDataArch({bool isrefresh = false}) async {
+  Future<bool> GetDataArch({bool isrefresh = false,bool isBack = false}) async {
     if (isrefresh) {
-      CurrentPage = 0;
       setState(() {
+        CurrentPage = 0;
+
         _searchResult = "";
 
       });
-    } else {
+    }else{
+      if (isBack) {
 
+        setState(() {
+          CurrentPage = CurrentPage - 1;
+
+          _searchResult = "";
+
+        });
+      }else{
+        setState(() {
+          CurrentPage++;
+
+        });
+      }
     }
+
     final Uri uri;
     if (_searchResult == "") {
+      print(CurrentPage.toString()+'in');
       uri = Uri.parse(
           "http://pc.eidc.gov.ly:8080/api/decrees?page=$CurrentPage&size=20&sort=id,asc");
     } else {
@@ -80,7 +96,9 @@ class _SearchPageState extends State<SearchPage> {
       } else {
         arch = result;
       }
-      CurrentPage++;
+
+
+
       var s = response.headers.values.toList().asMap();
       if (totalPages > 10) {
       } else {
@@ -225,7 +243,7 @@ class _SearchPageState extends State<SearchPage> {
             ),
             actions: <Widget>[
               IconButton(
-                icon: Icon(Icons.menu_rounded,
+                icon: Icon(Icons.refresh_rounded,
                     color: Color.fromARGB(255, 188, 139, 70)),
                 onPressed: () {
                   setState(() {
@@ -233,7 +251,7 @@ class _SearchPageState extends State<SearchPage> {
                     print(_searchResult);
                   });
 
-                  GetDataArch();
+                  GetDataArch(isrefresh: true);
                 },
               ),
 
@@ -274,7 +292,7 @@ class _SearchPageState extends State<SearchPage> {
       });},
     onSubmitted: (value){
       setState(() {
-        CurrentPage = 0;
+        CurrentPage = -1;
         _searchResult = value;
         print(_searchResult);
       });
@@ -310,16 +328,32 @@ class _SearchPageState extends State<SearchPage> {
                               child: itemsData[index]));
                     }),
               ),
-              IconButton(onPressed: (){
+                  Row(mainAxisAlignment: MainAxisAlignment.center , children: [ CurrentPage > 0 ?  IconButton(onPressed: (){
 
-              }, icon: IconButton(
-                icon: const Icon(Icons.arrow_circle_right_sharp),
-                color: Color.fromARGB(255, 188, 139, 70),
-                onPressed: () {
-                  GetDataArch();
+                }, icon: IconButton(
+                  icon: const Icon(Icons.arrow_circle_left_sharp),
+                  color: Color.fromARGB(255, 188, 139, 70),
+                  onPressed: () {
+                    print(CurrentPage.toString() + 'asdas');
+                    print(CurrentPage);
+                    GetDataArch(isBack:true);
+                    print(CurrentPage);
 
-                },
-              ), )
+                  },
+                )  ): const SizedBox(),
+                  IconButton(onPressed: (){
+
+                  }, icon: IconButton(
+                    icon: const Icon(Icons.arrow_circle_right_sharp),
+                    color: Color.fromARGB(255, 188, 139, 70),
+                    onPressed: () {
+                      GetDataArch();
+
+                    },
+                  ), ),],),
+
+
+
             ],)
           ),
         ),

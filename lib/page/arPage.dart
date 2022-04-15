@@ -306,7 +306,8 @@ class _SearchPageState extends State<SearchPage> {
             color: Color.fromARGB(255, 188, 139, 70)),
         onPressed: () {
           setState(() {
-            CurrentPage = 0;
+            CurrentPage = -1;
+
             print(_searchResult);
           });
 

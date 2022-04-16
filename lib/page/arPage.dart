@@ -32,7 +32,6 @@ class _SearchPageState extends State<SearchPage> {
   List<DecreeArchive> archFiltered = [];
   TextEditingController controller = TextEditingController();
   String _searchResult = '';
-  String searchResult = '';
   bool downloading = false;
   var progress = "";
   var path = "No Data";
@@ -46,34 +45,31 @@ class _SearchPageState extends State<SearchPage> {
       RefreshController(initialRefresh: true);
   final TextEditingController _controller = TextEditingController();
 
-  Future<bool> GetDataArch({bool isrefresh = false,bool isBack = false}) async {
+  Future<bool> GetDataArch(
+      {bool isrefresh = false, bool isBack = false}) async {
     if (isrefresh) {
       setState(() {
         CurrentPage = 0;
 
         _searchResult = "";
-
       });
-    }else{
+    } else {
       if (isBack) {
-
         setState(() {
           CurrentPage = CurrentPage - 1;
 
           _searchResult = "";
-
         });
-      }else{
+      } else {
         setState(() {
           CurrentPage++;
-
         });
       }
     }
 
     final Uri uri;
     if (_searchResult == "") {
-      print(CurrentPage.toString()+'in');
+      print(CurrentPage.toString() + 'in');
       uri = Uri.parse(
           "http://pc.eidc.gov.ly:8080/api/decrees?page=$CurrentPage&size=20&sort=id,asc");
     } else {
@@ -97,8 +93,6 @@ class _SearchPageState extends State<SearchPage> {
         arch = result;
       }
 
-
-
       var s = response.headers.values.toList().asMap();
       if (totalPages > 10) {
       } else {
@@ -106,20 +100,17 @@ class _SearchPageState extends State<SearchPage> {
         totalPages = (Nu / 20).ceil();
       }
       print(totalPages);
-      if(result !=[]){
+      if (result != []) {
         getPostsData();
-
       }
 
       setState(() {
-        searchResult = _searchResult;
 
       });
       return true;
-    } else{
+    } else {
       print('notworking');
-      Navigator.of(context)
-          .pushReplacementNamed('/login');
+      Navigator.of(context).pushReplacementNamed('/login');
       return false;
     }
   }
@@ -130,7 +121,6 @@ class _SearchPageState extends State<SearchPage> {
     responseList.forEach((post) {
       listItems.add(GestureDetector(
           onTap: () {
-
             Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -214,7 +204,7 @@ class _SearchPageState extends State<SearchPage> {
     return SafeArea(
       child: SmartRefresher(
         controller: refreshController,
-        enablePullUp: true,
+        enablePullDown: true,
         onRefresh: () async {
           final resualt = await GetDataArch(isrefresh: true);
           if (resualt) {
@@ -231,15 +221,15 @@ class _SearchPageState extends State<SearchPage> {
           appBar: AppBar(
             elevation: 0,
             backgroundColor: Color.fromARGB(255, 253, 253, 253),
-            leading: IconButton(icon: Icon(
-              Icons.logout_rounded,
-              color: Color.fromARGB(255, 188, 139, 70),
-            ), onPressed: () async{
-              (await SharedPreferences.getInstance()).remove('jwt');
-              Navigator.of(context)
-                  .pushReplacementNamed('/login');
-
-            },
+            leading: IconButton(
+              icon: Icon(
+                Icons.logout_rounded,
+                color: Color.fromARGB(255, 188, 139, 70),
+              ),
+              onPressed: () async {
+                (await SharedPreferences.getInstance()).remove('jwt');
+                Navigator.of(context).pushReplacementNamed('/login');
+              },
             ),
             actions: <Widget>[
               IconButton(
@@ -249,16 +239,16 @@ class _SearchPageState extends State<SearchPage> {
                   setState(() {
                     CurrentPage = 0;
                     print(_searchResult);
+                      _controller.text = "";
                   });
 
                   GetDataArch(isrefresh: true);
                 },
               ),
-
             ],
           ),
           body: Container(
-            height: size.height,
+              height: size.height,
               margin: EdgeInsets.only(top: 10),
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 20),
               decoration: BoxDecoration(
@@ -267,96 +257,98 @@ class _SearchPageState extends State<SearchPage> {
                   Radius.circular(20),
                 ),
               ),
-            child: Column(children:
-                [
-    Row(children: <Widget>[ Expanded(
-  child:
-  Directionality(
-    textDirection: ui.TextDirection.rtl,
-    child:
-    TextField(
-    controller: _controller,
-    textAlign:  TextAlign.right,
-    decoration: InputDecoration(
-
-      hintText: "بحث",
-      hintStyle: TextStyle(
-        color: Colors.black.withAlpha(120),
-      ),
-      border: InputBorder.none,
-    ),
-    onChanged:(value){
-      setState(() {
-        _searchResult = value;
-        print(_searchResult);
-      });},
-    onSubmitted: (value){
-      setState(() {
-        CurrentPage = -1;
-        _searchResult = value;
-        print(_searchResult);
-      });
-
-      GetDataArch();
-    },
-  ),
-),),
-      IconButton(
-        icon: Icon(Icons.search,
-            color: Color.fromARGB(255, 188, 139, 70)),
-        onPressed: () {
-          setState(() {
-            CurrentPage = -1;
-
-            print(_searchResult);
-          });
-
-          GetDataArch();
-        },
-      ),
-  ],),
-
-
-              Expanded(
-
-                child: ListView.builder(
-                    itemCount: itemsData.length,
-                    itemBuilder: (context, index) {
-                      return Directionality(
+              child: Column(
+                children: [
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: Directionality(
                           textDirection: ui.TextDirection.rtl,
-                          child: Align(
-                              alignment: Alignment.topCenter,
-                              child: itemsData[index]));
-                    }),
-              ),
-                  Row(mainAxisAlignment: MainAxisAlignment.center , children: [ CurrentPage > 0 ?  IconButton(onPressed: (){
+                          child: TextField(
+                            controller: _controller,
+                            textAlign: TextAlign.right,
+                            decoration: InputDecoration(
+                              hintText: "بحث",
+                              hintStyle: TextStyle(
+                                color: Colors.black.withAlpha(120),
+                              ),
+                              border: InputBorder.none,
+                            ),
+                            onChanged: (value) {
+                              setState(() {
+                                _searchResult = value;
+                                print(_searchResult);
+                              });
+                            },
+                            onSubmitted: (value) {
+                              setState(() {
+                                CurrentPage = -1;
+                                _searchResult = value;
+                                print(_searchResult);
+                              });
 
-                }, icon: IconButton(
-                  icon: const Icon(Icons.arrow_circle_left_sharp),
-                  color: Color.fromARGB(255, 188, 139, 70),
-                  onPressed: () {
-                    print(CurrentPage.toString() + 'asdas');
-                    print(CurrentPage);
-                    GetDataArch(isBack:true);
-                    print(CurrentPage);
+                              GetDataArch();
+                            },
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.search,
+                            color: Color.fromARGB(255, 188, 139, 70)),
+                        onPressed: () {
+                          setState(() {
+                            CurrentPage = -1;
 
-                  },
-                )  ): const SizedBox(),
-                  IconButton(onPressed: (){
+                            print(_searchResult);
+                          });
 
-                  }, icon: IconButton(
-                    icon: const Icon(Icons.arrow_circle_right_sharp),
-                    color: Color.fromARGB(255, 188, 139, 70),
-                    onPressed: () {
-                      GetDataArch();
-
-                    },
-                  ), ),],),
-
-
-
-            ],)
-          ),
+                          GetDataArch();
+                        },
+                      ),
+                    ],
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                        itemCount: itemsData.length,
+                        itemBuilder: (context, index) {
+                          return Directionality(
+                              textDirection: ui.TextDirection.rtl,
+                              child: Align(
+                                  alignment: Alignment.topCenter,
+                                  child: itemsData[index]));
+                        }),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CurrentPage > 0
+                          ? IconButton(
+                              onPressed: () {},
+                              icon: IconButton(
+                                icon: const Icon(Icons.arrow_circle_left_sharp),
+                                color: Color.fromARGB(255, 188, 139, 70),
+                                onPressed: () {
+                                  print(CurrentPage.toString() + 'asdas');
+                                  print(CurrentPage);
+                                  GetDataArch(isBack: true);
+                                  print(CurrentPage);
+                                },
+                              ))
+                          : const SizedBox(),
+                      IconButton(
+                        onPressed: () {},
+                        icon: IconButton(
+                          icon: const Icon(Icons.arrow_circle_right_sharp),
+                          color: Color.fromARGB(255, 188, 139, 70),
+                          onPressed: () {
+                            GetDataArch();
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              )),
         ),
       ),
     );

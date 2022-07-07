@@ -114,7 +114,7 @@ class DetailPage extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
-                              PostPdf.title,
+                               "العنوان:  " + PostPdf.title,
                               maxLines: 4,
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
@@ -125,16 +125,16 @@ class DetailPage extends StatelessWidget {
                               height: 20,
                             ),
                             Text(
-                              PostPdf.decreeNo,
+                              "رقم القرار:  " + PostPdf.decreeNo,
                               style: const TextStyle(
                                   fontSize: 17,
-                                  color: Color.fromRGBO(58, 66, 86, 1.0)),
+                                  color: Color.fromRGBO(58, 66, 86, 1.0),fontWeight: FontWeight.bold),
                             ),
                             SizedBox(
                               height: 20,
                             ),
                             Text(
-                              PostPdf.minister.name,
+                              "الوزير:   " +PostPdf.minister.name,
                               style: const TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold),
@@ -142,23 +142,18 @@ class DetailPage extends StatelessWidget {
                             SizedBox(
                               height: 20,
                             ),
-                            Text(
-                              PostPdf.decreeStatus,
+                            Text(   PostPdf.pages != null ? "عدد الصفحات:    " + PostPdf.pages.toString() :"عدد الصفحات:   "
+                          ,
                               style: const TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold),
                             ),
                             SizedBox(
                               height: 20,
-                            ),
-                            Text(
-                              PostPdf.pdfFileContentType,
-                              style: const TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold),
                             ),
 
-                            Text(
+
+                            Text( "تاريخ القرار:  " +
                               DateFormat('yyyy-MM-dd')
                                   .format(PostPdf.decreeDate)
                                   .toString(),
@@ -170,6 +165,17 @@ class DetailPage extends StatelessWidget {
                               height: 20,
                             ),
                             Text(
+                                PostPdf.year != null ? "سنة القرار:  " + PostPdf.year.toString() :"سنة القرار: "
+                                    ,
+                              style: const TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Text(
+                              "الحكومة:   " +
                               PostPdf.government.name,
                               style: const TextStyle(
                                   color: Colors.black,
@@ -179,7 +185,7 @@ class DetailPage extends StatelessWidget {
                               height: 20,
                             ),
                             Text(
-                              PostPdf.keywords,
+                              " كلمات مفتاحية:    " +PostPdf.keywords,
                               style: const TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold),
@@ -188,12 +194,20 @@ class DetailPage extends StatelessWidget {
                               height: 20,
                             ),
                             Text(
-                              PostPdf.details != null ? PostPdf.details.toString() :"",
+                              PostPdf.pdfFileUrl != null ? "pdfFileUrl:  "  + PostPdf.pdfFileUrl.toString() :"pdfFileUrl: ",
                               style: const TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold),
                             ),
-
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Text(
+                              PostPdf.details != null ?  "ملاحظات:  " + PostPdf.details.toString() :"ملاحظات:  ",
+                              style: const TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold),
+                            ),
                             Text(
                               PostPdf.notes != null ? PostPdf.notes.toString() :"",
                               style: const TextStyle(
@@ -214,9 +228,9 @@ class DetailPage extends StatelessWidget {
             child: ElevatedButton(
               onPressed: () => {
                 downloadFile(
-                    'http://pc.eidc.gov.ly:8080/api/public/file/download/${PostPdf.pdfFileUrl}'),
+                    'https://pc.eidc.gov.ly:8080/api/public/file/download/${PostPdf.pdfFileUrl}'),
                 OpenPdf(
-                    'http://pc.eidc.gov.ly:8080/api/public/file/download/${PostPdf.pdfFileUrl}')
+                    'https://pc.eidc.gov.ly:8080/api/public/file/download/${PostPdf.pdfFileUrl}')
               },
               style: ElevatedButton.styleFrom(
                 primary: Color.fromRGBO(58, 66, 86, 1.0),

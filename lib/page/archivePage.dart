@@ -55,11 +55,11 @@ class _HomePageState extends State<HomePage> {
     final Uri uri;
     if (searchResult == "") {
       uri = Uri.parse(
-          "http://pc.eidc.gov.ly:8080/api/decrees?page=$CurrentPage&size=20&sort=id,asc");
+          "https://pc.eidc.gov.ly:8080/api/decrees?page=$CurrentPage&size=20&sort=id,asc");
     } else {
       totalPages = 1;
       uri = Uri.parse(
-          "http://pc.eidc.gov.ly:8080/api/decrees?decreeNo.contains=$searchResult&title.contains=$searchResult&decreeDate.contains=$searchResult&notes.contains=$searchResult&keywords.contains=$searchResult&page=$CurrentPage&size=20&sort=id,asc");
+          "https://pc.eidc.gov.ly:8080/api/decrees?decreeNo.contains=$searchResult&title.contains=$searchResult&decreeDate.contains=$searchResult&notes.contains=$searchResult&keywords.contains=$searchResult&page=$CurrentPage&size=20&sort=id,asc");
     }
 
     final tokenJwt = (await SharedPreferences.getInstance()).getString("jwt");
@@ -220,9 +220,9 @@ class _HomePageState extends State<HomePage> {
             print('$data');
             if (data.toString().contains(".pdf")) {
               downloadFile(
-                  'http://pc.eidc.gov.ly:8080/api/public/file/download/$data');
+                  'https://pc.eidc.gov.ly:8080/api/public/file/download/$data');
               OpenPdf(
-                  'http://pc.eidc.gov.ly:8080/api/public/file/download/$data');
+                  'https://pc.eidc.gov.ly:8080/api/public/file/download/$data');
             }
           })))
       .toList();

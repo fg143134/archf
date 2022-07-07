@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:archf/widgets/tabbar_widget.dart';
 import 'package:archf/widgets/scrollable_widget.dart';
 import 'package:intl/intl.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -71,11 +72,11 @@ class _SearchPageState extends State<SearchPage> {
     if (_searchResult == "") {
       print(CurrentPage.toString() + 'in');
       uri = Uri.parse(
-          "http://pc.eidc.gov.ly:8080/api/decrees?page=$CurrentPage&size=20&sort=id,asc");
+          "https://pc.eidc.gov.ly:8080/api/decrees?page=$CurrentPage&size=20&sort=id,asc");
     } else {
       totalPages = 1;
       uri = Uri.parse(
-          "http://pc.eidc.gov.ly:8080/api/decrees?decreeNo.contains=$_searchResult&title.contains=$_searchResult&decreeDate.contains=$_searchResult&notes.contains=$_searchResult&keywords.contains=$_searchResult&page=$CurrentPage&size=20&sort=id,asc");
+          "https://pc.eidc.gov.ly:8080/api/decrees?decreeNo.contains=$_searchResult&title.contains=$_searchResult&decreeDate.contains=$_searchResult&notes.contains=$_searchResult&keywords.contains=$_searchResult&page=$CurrentPage&size=20&sort=id,asc");
     }
 
     final tokenJwt = (await SharedPreferences.getInstance()).getString("jwt");
@@ -94,9 +95,10 @@ class _SearchPageState extends State<SearchPage> {
       }
 
       var s = response.headers.values.toList().asMap();
+      print(s);
       if (totalPages > 10) {
       } else {
-        int Nu = int.parse(s[12] ?? "20");
+        int Nu = int.parse(s[11] ?? "20");
         totalPages = (Nu / 20).ceil();
       }
       print(totalPages);
@@ -150,30 +152,54 @@ class _SearchPageState extends State<SearchPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
+                            post.year.toString(),
+                            style: const TextStyle(
+                                fontSize: 12, color: Colors.blueGrey),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Text(
                             post.title,
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
                                 color: Color.fromARGB(255, 188, 139, 70),
-                                fontSize: 19,
+                                fontSize: 15,
                                 fontWeight: FontWeight.bold),
                           ),
                           SizedBox(
-                            height: 20,
+                            height: 8,
                           ),
                           Text(
-                            post.decreeNo,
+                            "رقم القرار:  "  + post.decreeNo,
                             style: const TextStyle(
-                                fontSize: 17, color: Colors.blueGrey),
+                                fontSize: 12, color: Colors.blueGrey,
+                                fontWeight: FontWeight.bold
+                            ),
+
                           ),
                           SizedBox(
-                            height: 20,
+                            height: 5,
                           ),
                           Text(
                             post.minister.name,
                             style: const TextStyle(
-                                fontSize: 16,
+                                fontSize: 12,
                                 color: Colors.blueGrey,
                                 fontWeight: FontWeight.bold),
+
+                          ),
+
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            post.government.name,
+                            style: const TextStyle(
+                                fontSize: 12,
+                                color: Colors.blueGrey,
+                                fontWeight: FontWeight.bold),
+
                           ),
                         ],
                       ),
@@ -306,7 +332,12 @@ class _SearchPageState extends State<SearchPage> {
                         },
                       ),
                     ],
+
                   ),
+
+
+
+
                   Expanded(
                     child: ListView.builder(
                         itemCount: itemsData.length,

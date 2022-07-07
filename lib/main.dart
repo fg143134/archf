@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:archf/model/DecreeArchive.dart';
 import 'package:archf/page/Details.dart';
+import 'package:archf/page/TryOut.dart';
 import 'package:archf/page/arPage.dart';
 import 'package:archf/page/archivePage.dart';
 import 'package:archf/page/loginPage.dart';
